@@ -1,0 +1,335 @@
+services:
+  victoria_metrics:
+    container_name: victoria-metrics
+    image: victoriametrics/victoria-metrics:v1.122.0
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./data/victoria-metrics/victoria-metrics-data:/victoria-metrics-data
+      - ./data/victoria-metrics/promscrape_docker.yaml:/etc/victoria-metrics-scrape.yml
+    command:
+      -storageDataPath=/victoria-metrics-data
+      -promscrape.config=/etc/victoria-metrics-scrape.yml
+    networks:
+      - microservices-net
+
+  loki:
+    image: grafana/loki:3.5.3
+    container_name: loki
+    ports:
+      - "3100:3100"
+    networks:
+      - microservices-net
+
+  tempo:
+    image: grafana/tempo:2.3.1
+    container_name: tempo
+    volumes:
+      - ./data/tempo/tempo.yaml:/etc/tempo.yaml
+    command:
+      -config.file=/etc/tempo.yaml
+    ports:
+      - "3200:3200"
+      - "9095:9095"
+      - "4317:4317"
+      - "4318:4318"
+      - "9411:9411"
+      - "14268:14268"
+    networks:
+      - microservices-net
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: grafana
+    volumes:
+      - ./data/grafana:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    ports:
+      - "3000:3000"
+    depends_on:
+      victoria_metrics:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
+    networks:
+      - microservices-net
+
+  eureka_server:
+    container_name: eureka-server
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: eureka-server/target/eureka-server-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/eureka-server:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      LOKI: http://0.0.0.1:3100
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -H 'Authorization: Bearer ${TOKEN}' http://0.0.0.1:8761/actuator/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - microservices-net
+
+  config_server:
+    container_name: config-server
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: config-server/target/config-server-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/config-server:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      LOKI: http://0.0.0.1:3100
+    ports:
+      - "8888:8888"
+    depends_on:
+      eureka_server:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f -H 'Authorization: Bearer ${TOKEN}' http://0.0.0.1:8888/actuator/health || exit 1" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - microservices-net
+
+  admin_server:
+    container_name: admin-server
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: admin-server/target/admin-server-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/admin-server:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: cloud
+      LOKI: http://0.0.0.1:3100
+    ports:
+      - "8039:8039"
+    depends_on:
+      eureka_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  api_gateway:
+    container_name: api-gateway
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: api-gateway/target/api-gateway-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/api-gateway:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      LOKI: http://0.0.0.1:3100
+    ports:
+      - "9000:9000"
+    depends_on:
+      eureka_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  dictionary_service:
+    container_name: dictionary-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: dictionary-service/target/dictionary-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/dictionary-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8031:8031"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  file_service:
+    container_name: file-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: file-service/target/file-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/file-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    volumes:
+      - ./files/images:/application/files/images
+    ports:
+      - "8032:8032"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  movie_service:
+    container_name: movie-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: movie-service/target/movie-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/movie-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8033:8033"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  session_service:
+    container_name: session-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: session-service/target/session-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/session-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8034:8034"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  user_service:
+    container_name: user-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: user-service/target/user-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/user-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8035:8035"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  booking_service:
+    container_name: booking-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: booking-service/target/booking-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/booking-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8036:8036"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  receipt_service:
+    container_name: receipt-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: receipt-service/target/receipt-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/receipt-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DPATH_TO_FONT=${FONT} -DCONFIG_TOKEN=${TOKEN}"
+    volumes:
+      - ./data/fonts:/usr/share/fonts
+    ports:
+      - "8037:8037"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+  notification_service:
+    container_name: notification-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: notification-service/target/notification-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/notification-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8038:8038"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    external: true

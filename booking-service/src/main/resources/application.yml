@@ -1,0 +1,6 @@
+server:
+  port: 8036
+
+spring:
+  application:
+    name: booking-service

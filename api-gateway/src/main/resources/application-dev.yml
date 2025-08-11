@@ -1,0 +1,109 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: cloud-service
+            client-secret: LlqEgRmCHc4QJ3oQkd0GZiIw47wLlaZY
+            authorization-grant-type: client_credentials
+            scope:
+              - openid
+              - metrics
+              - eureka
+          login:
+            provider: keycloak
+            scope:
+              - metrics
+              - eureka
+              - openid
+            client-id: cloud-service
+            client-secret: LlqEgRmCHc4QJ3oQkd0GZiIw47wLlaZY
+        provider:
+          keycloak:
+            issuer-uri: http://0.0.0.1:9180/realms/cinema
+            token-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          issuer-uri: http://0.0.0.1:9180/realms/cinema
+          jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: Dictionary Service
+        url: /aggregate/dictionary-service/v3/api-docs
+      - name: File Service
+        url: /aggregate/file-service/v3/api-docs
+      - name: Movie Service
+        url: /aggregate/movie-service/v3/api-docs
+      - name: Session Service
+        url: /aggregate/session-service/v3/api-docs
+      - name: Booking Service
+        url: /aggregate/booking-service/v3/api-docs
+      - name: Receipt Service
+        url: /aggregate/receipt-service/v3/api-docs
+      - name: User Service
+        url: /aggregate/user-service/v3/api-docs
+
+eureka:
+  client:
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://0.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  zipkin:
+    tracing:
+      endpoint: http://0.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.4
+
+logging:
+  level:
+    io:
+      github:
+        resilience4j: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 20
+        failureRateThreshold: 40
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimum-number-of-calls: 10
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 10s
+
+errors:
+  fallback: Сервис временно недоступен, повторите попытку позже!

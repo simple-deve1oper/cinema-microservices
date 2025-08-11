@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      uri: http://0.0.0.1:8888
+      fail-fast: true
+      name: movie-service
+      headers:
+        Authorization: Bearer ${CONFIG_TOKEN}

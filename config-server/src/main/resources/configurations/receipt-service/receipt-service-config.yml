@@ -1,0 +1,84 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://0.0.0.1:5440/receipt_db
+    username: developer
+    password: ENC(sXI8e1J5zYc+nL8pj89KAPMlu9S/zuQjNeclEtj+06cPnNH7a9gp/kQg8YfBvIL0)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    clean-disabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: ENC(yT2oF4I9HtGlw6Pv0yCee5YjPp/DiehEm5ci17E8v9J9KTEBH6VZhzFGKuaBPKUOqVcdYp9PoQRL5/rkj/ZIRLlymzfRdIFrWyUQg9F8HKM=)
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics
+              - eureka
+              - config
+        provider:
+          keycloak:
+            issuer-uri: http://0.0.0.1:9180/realms/cinema
+            token-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          issuer-uri: http://0.0.0.1:9180/realms/cinema
+          jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+  rabbitmq:
+    host: 0.0.0.1
+    port: 5672
+    username: admin
+    password: ENC(syWMjhm7gF0eE09JU6CoqQV/EJL/J6OxIyKIZemuDyr+/jktSvkL/HUxjsDm4mva)
+
+eureka:
+  client:
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://0.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  zipkin:
+    tracing:
+      endpoint: http://0.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.4
+
+logging:
+  level:
+    root: "info"
+    dev.receipt: "debug"
+
+url:
+  booking: lb://booking-service/api/v1/bookings
+  movie: lb://movie-service/api/v1/movies
+  user: lb://user-service/api/v1/users
+
+swagger:
+  url: http://0.0.0.1:9000

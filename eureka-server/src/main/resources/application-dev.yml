@@ -1,0 +1,57 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: cloud-service
+            client-secret: LlqEgRmCHc4QJ3oQkd0GZiIw47wLlaZY
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics
+          login:
+            provider: keycloak
+            scope:
+              - metrics
+              - openid
+            client-id: cloud-service
+            client-secret: LlqEgRmCHc4QJ3oQkd0GZiIw47wLlaZY
+        provider:
+          keycloak:
+            issuer-uri: http://0.0.0.1:9180/realms/cinema
+            token-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          issuer-uri: http://0.0.0.1:9180/realms/cinema
+          jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+
+eureka:
+  instance:
+    hostname: 0.0.0.1
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+management:
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  zipkin:
+    tracing:
+      endpoint: http://0.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.4

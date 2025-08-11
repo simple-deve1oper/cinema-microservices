@@ -1,0 +1,48 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+    clean-disabled: true
+  cloud:
+    config:
+      enabled: false
+    loadbalancer:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: "info"
+    dev.session: "debug"
+
+keycloak:
+  client-id: gateway-client
+  client-secret: lax66b9pOJMmfBEG4e9A8AyKrzRISOSY
+
+eureka:
+  client:
+    enabled: false
+
+errors:
+  session:
+    id:
+      not-found: Сеанс с идентификатором %d не найден
+    hall-date-time:
+      already-exists: Сеанс в зале %d на время %s уже существует
+    movie-id:
+      not-found: Фильм с идентификатором %d не найден
+  place:
+    id:
+      not-found: Место с идентификатором %s не найдено
+    session-id-row-number:
+      already-exists: Место в ряду %d с номером %d уже существует
+
+url:
+  movie: http://localhost:8161/api/v1/movies

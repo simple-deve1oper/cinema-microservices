@@ -1,0 +1,16 @@
+rabbitmq:
+  notification:
+    queue:
+      name:
+        creation: creation_notification_queue_booking
+        update: update_notification_queue_booking
+        update-status: update_status_notification_queue_booking
+        delete: delete_notification_queue_booking
+
+template:
+  subject: Бронь № %d
+  content:
+    create: Вы успешно забронировали место на сеанс
+    update: Ваша бронь с № %d обновлена
+    update-status: Статус вашей брони с № %d обновлён
+    delete: Ваша бронь с № %d удалена

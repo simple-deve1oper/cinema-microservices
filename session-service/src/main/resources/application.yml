@@ -1,0 +1,6 @@
+server:
+  port: 8034
+
+spring:
+  application:
+    name: session-service

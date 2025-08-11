@@ -1,0 +1,37 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+    clean-disabled: true
+  cloud:
+    config:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: "info"
+    dev.dictionary: "debug"
+
+keycloak:
+  client-id: gateway-client
+  client-secret: lax66b9pOJMmfBEG4e9A8AyKrzRISOSY
+
+eureka:
+  client:
+    enabled: false
+
+errors:
+  country:
+    code:
+      not-found: Страна с кодом %s не найдена
+  participant:
+    id:
+      not-found: Участник с идентификатором %d не найден

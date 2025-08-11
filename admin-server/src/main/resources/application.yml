@@ -1,0 +1,6 @@
+server:
+  port: 8039
+
+spring:
+  application:
+    name: admin-server

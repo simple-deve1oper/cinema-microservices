@@ -1,0 +1,80 @@
+spring:
+  mail:
+    host: 0.0.0.1
+    port: 1025
+    username: no-reply@cinema.ru
+    password: ENC(gOiaf+BUMHRuBPHRwMPE0mlzmi2bi4iFbBJHz6/WbO6QBP+rlMvKoVnTxo2afvEW)
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: false
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: ENC(yT2oF4I9HtGlw6Pv0yCee5YjPp/DiehEm5ci17E8v9J9KTEBH6VZhzFGKuaBPKUOqVcdYp9PoQRL5/rkj/ZIRLlymzfRdIFrWyUQg9F8HKM=)
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics
+              - eureka
+              - config
+        provider:
+          keycloak:
+            issuer-uri: http://0.0.0.1:9180/realms/cinema
+            token-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          issuer-uri: http://0.0.0.1:9180/realms/cinema
+          jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+  rabbitmq:
+    host: 0.0.0.1
+    port: 5672
+    username: admin
+    password: ENC(45zIoe3egUarZu56VuYP9ExC5+qtxD013onK4xN8kYxsRv69mxDY0Ra2KRgu16pD)
+
+eureka:
+  client:
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://0.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  zipkin:
+    tracing:
+      endpoint: http://0.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.4
+
+logging:
+  level:
+    root: "info"
+    dev.notification: "debug"
+
+swagger:
+  url: http://0.0.0.1:9000

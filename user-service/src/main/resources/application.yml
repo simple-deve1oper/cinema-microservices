@@ -1,0 +1,10 @@
+server:
+  port: 8035
+
+spring:
+  application:
+    name: user-service
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

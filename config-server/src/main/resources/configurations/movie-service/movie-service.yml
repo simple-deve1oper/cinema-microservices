@@ -1,0 +1,21 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  country:
+    codes:
+      not-found: "Переданы несуществующие коды стран: %s"
+  movie:
+    id:
+      not-found: "Фильм с идентификатором %d не найден"
+  participant:
+    ids:
+      not-found: "Переданы несуществующие идентификаторы участников: %s"
+  genre:
+    ids:
+      not-found: "Переданы несуществующие идентификаторы жанров: %s"

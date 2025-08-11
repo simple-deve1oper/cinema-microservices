@@ -1,0 +1,25 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  user:
+    id:
+      not-found: Пользователь с идентификатором %s не найден
+      access-forbidden:
+        client:
+          view: Доступ запрещён к просмотру чужой информации
+          update: Доступ запрещён к обновлению чужой информации
+          verification-email: Доступ запрещён к вызову подтверждения email чужого профиля
+        update-password: Доступ запрещён к изменению пароля чужого профиля
+    username:
+      already-exists: Пользователь с username %s уже существует
+      not-found: Пользователь с username %s не найден
+    email:
+      already-exists: Пользователь с электронной почтой %s уже существует
+    email-verified:
+      already-exists: У пользователя с идентификатором %s электронная почта уже подтверждена

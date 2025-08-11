@@ -1,0 +1,56 @@
+services:
+  victoria_metrics:
+    container_name: victoria-metrics
+    image: victoriametrics/victoria-metrics:v1.122.0
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./data/victoria-metrics/victoria-metrics-data:/victoria-metrics-data
+      - ./data/victoria-metrics/promscrape.yaml:/etc/victoria-metrics-scrape.yml
+    command:
+      -storageDataPath=/victoria-metrics-data
+      -promscrape.config=/etc/victoria-metrics-scrape.yml
+    networks:
+      - microservices-net
+
+  loki:
+    image: grafana/loki:3.5.3
+    container_name: loki
+    ports:
+      - "3100:3100"
+    networks:
+      - microservices-net
+
+  tempo:
+    image: grafana/tempo:2.3.1
+    container_name: tempo
+    volumes:
+      - ./data/tempo/tempo.yaml:/etc/tempo.yaml
+    command:
+      -config.file=/etc/tempo.yaml
+    ports:
+      - "3200:3200"
+      - "9095:9095"
+      - "4317:4317"
+      - "4318:4318"
+      - "9411:9411"
+      - "14268:14268"
+    networks:
+      - microservices-net
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: grafana
+    volumes:
+      - ./data/grafana:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    ports:
+      - "3000:3000"
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    external: true

@@ -1,0 +1,45 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+    loadbalancer:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: "info"
+    dev.user: "debug"
+
+keycloak:
+  client-id: gateway-client
+  client-secret: lax66b9pOJMmfBEG4e9A8AyKrzRISOSY
+
+eureka:
+  client:
+    enabled: false
+
+errors:
+  user:
+    id:
+      not-found: Пользователь с идентификатором %s не найден
+      access-forbidden:
+        client:
+          view: Доступ запрещён к просмотру чужой информации
+          update: Доступ запрещён к обновлению чужой информации
+          verification-email: Доступ запрещён к вызову подтверждения email чужого профиля
+        update-password: Доступ запрещён к изменению пароля чужого профиля
+    username:
+      already-exists: Пользователь с username %s уже существует
+      not-found: Пользователь с username %s не найден
+    email:
+      already-exists: Пользователь с электронной почтой %s уже существует
+    email-verified:
+      already-exists: У пользователя с идентификатором %s электронная почта уже подтверждена

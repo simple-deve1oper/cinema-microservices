@@ -1,0 +1,169 @@
+scrape_configs:
+  - job_name: eureka_server
+    static_configs:
+      - targets: [ "0.0.0.1:8761" ]
+        labels:
+          application: eureka-server
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: config_server
+    static_configs:
+      - targets: [ "0.0.0.1:8888" ]
+        labels:
+          application: config-server
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: admin_server
+    static_configs:
+      - targets: [ "0.0.0.1:8039" ]
+        labels:
+          application: admin-server
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: api_gateway
+    static_configs:
+      - targets: [ "0.0.0.1:9000" ]
+        labels:
+          application: api-gateway
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: dictionary_service
+    static_configs:
+      - targets: [ "0.0.0.1:8031" ]
+        labels:
+          application: dictionary-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: file_service
+    static_configs:
+      - targets: [ "0.0.0.1:8032" ]
+        labels:
+          application: file-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: movie_service
+    static_configs:
+      - targets: [ "0.0.0.1:8033" ]
+        labels:
+          application: movie-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: session_service
+    static_configs:
+      - targets: [ "0.0.0.1:8034" ]
+        labels:
+          application: session-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: user_service
+    static_configs:
+      - targets: [ "0.0.0.1:8035" ]
+        labels:
+          application: user-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: booking_service
+    static_configs:
+      - targets: [ "0.0.0.1:8036" ]
+        labels:
+          application: booking-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: receipt_service
+    static_configs:
+      - targets: [ "0.0.0.1:8037" ]
+        labels:
+          application: receipt-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+  - job_name: notification_service
+    static_configs:
+      - targets: [ "0.0.0.1:8038" ]
+        labels:
+          application: notification-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials

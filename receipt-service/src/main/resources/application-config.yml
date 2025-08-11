@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      uri: http://0.0.0.1:8888
+      fail-fast: true
+      name: receipt-service
+      headers:
+        Authorization: Bearer ${CONFIG_TOKEN}
+
+font:
+  path: ${PATH_TO_FONT}

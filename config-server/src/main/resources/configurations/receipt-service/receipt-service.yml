@@ -1,0 +1,43 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  booking:
+    id-and-user-id:
+      not-found: Бронирование с идентификатором %d для пользователя %s не найдено
+  receipt:
+    booking-id:
+      not-found: Запись о квитанции с идентификатором бронирования %d не найдена
+      already-exists: Запись о квитанции с идентификатором %d уже существует
+
+rabbitmq:
+  receipt:
+    queue:
+      name:
+        creation: creation_receipt_queue_booking
+        update: update_receipt_queue_booking
+        update-status: update_status_receipt_queue_booking
+        delete: delete_receipt_queue_booking
+  notification:
+    queue:
+      name:
+        creation: creation_notification_queue_booking
+        update: update_notification_queue_booking
+        update-status: update_status_notification_queue_booking
+        delete: delete_notification_queue_booking
+    exchange:
+      name: exchange_notification_booking
+    routing-key:
+      name:
+        creation: creation_notification_routing_key
+        update: update_notification_routing_key
+        update-status: update_status_notification_routing_key
+        delete: delete_notification_routing_key
+
+currency:
+  sign: ₽

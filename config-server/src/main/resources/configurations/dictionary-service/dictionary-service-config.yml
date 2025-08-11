@@ -1,0 +1,74 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://0.0.0.1:5434/dictionary_db
+    username: developer
+    password: ENC(4Rfv84VOba00EP7Vi0CLIYDCOGzbMp/L3pDniVj5ADOedQU5kdIzgJQLTIwMy1bH)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    clean-disabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: ENC(yT2oF4I9HtGlw6Pv0yCee5YjPp/DiehEm5ci17E8v9J9KTEBH6VZhzFGKuaBPKUOqVcdYp9PoQRL5/rkj/ZIRLlymzfRdIFrWyUQg9F8HKM=)
+            authorization-grant-type: client_credentials
+            scope:
+              - metrics
+              - eureka
+              - config
+        provider:
+          keycloak:
+            issuer-uri: http://0.0.0.1:9180/realms/cinema
+            token-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      resourceserver:
+        jwt:
+          issuer-uri: http://0.0.0.1:9180/realms/cinema
+          jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+
+eureka:
+  client:
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://0.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  zipkin:
+    tracing:
+      endpoint: http://0.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.4
+
+logging:
+  level:
+    root: "info"
+    dev.dictionary: "debug"
+
+swagger:
+  url: http://0.0.0.1:9000

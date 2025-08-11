@@ -1,0 +1,6 @@
+server:
+  port: 8037
+
+spring:
+  application:
+    name: receipt-service

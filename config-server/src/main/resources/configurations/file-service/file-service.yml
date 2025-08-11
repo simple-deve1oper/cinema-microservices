@@ -1,0 +1,27 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  file:
+    path-exception: Ошибка получения доступа к ресурсу по пути %s
+  image:
+    id:
+      not-found: Запись об изображении с идентификатором %s не найдена
+    name:
+      already-exists: Файл c именем %s уже существует
+    movie-id:
+      bad-request: Обновление номеров изображений может происходить только по одному фильму за один запрос
+    movie-id-and-number:
+      not-found: Запись об изображении с идентификатором фильма %d и порядковым номером %d не найдена
+    number:
+      bad-request: В переданных объектах запроса номера не должны повторяться
+    number-is-ordinal:
+      bad-request: В переданных объектах запроса все номера должны быть порядковыми
+
+directory:
+  images: files/images

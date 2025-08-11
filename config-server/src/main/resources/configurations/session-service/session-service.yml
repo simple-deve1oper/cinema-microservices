@@ -1,0 +1,21 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  session:
+    id:
+      not-found: Сеанс с идентификатором %d не найден
+    hall-date-time:
+      already-exists: Сеанс в зале %d на время %s уже существует
+    movie-id:
+      not-found: Фильм с идентификатором %d не найден
+  place:
+    id:
+      not-found: Место с идентификатором %s не найдено
+    session-id-row-number:
+      already-exists: Место в ряду %d с номером %d уже существует

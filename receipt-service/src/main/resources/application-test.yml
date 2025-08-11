@@ -1,0 +1,75 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+    clean-disabled: true
+  cloud:
+    config:
+      enabled: false
+    loadbalancer:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: "info"
+    dev.receipt: "debug"
+
+keycloak:
+  client-id: gateway-client
+  client-secret: lax66b9pOJMmfBEG4e9A8AyKrzRISOSY
+
+eureka:
+  client:
+    enabled: false
+
+errors:
+  booking:
+    id-and-user-id:
+      not-found: Бронирование с идентификатором %d для пользователя %s не найдено
+  receipt:
+    booking-id:
+      not-found: Запись о квитанции с идентификатором бронирования %d не найдена
+      already-exists: Запись о квитанции с идентификатором %d уже существует
+
+currency:
+  sign: ₽
+
+rabbitmq:
+  receipt:
+    queue:
+      name:
+        creation: creation_receipt_queue_booking
+        update: update_receipt_queue_booking
+        update-status: update_status_receipt_queue_booking
+        delete: delete_receipt_queue_booking
+  notification:
+    queue:
+      name:
+        creation: creation_notification_queue_booking
+        update: update_notification_queue_booking
+        update-status: update_status_notification_queue_booking
+        delete: delete_notification_queue_booking
+    exchange:
+      name: exchange_notification_booking
+    routing-key:
+      name:
+        creation: creation_notification_routing_key
+        update: update_notification_routing_key
+        update-status: update_status_notification_routing_key
+        delete: delete_notification_routing_key
+
+url:
+  booking: http://localhost:8151/api/v1/bookings
+  user: http://localhost:8152/api/v1/users
+  movie: http://localhost:8153/api/v1/movies
+
+font:
+  path: DejaVuSerif-Bold.ttf

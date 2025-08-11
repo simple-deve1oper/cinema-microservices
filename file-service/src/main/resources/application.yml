@@ -1,0 +1,6 @@
+server:
+  port: 8032
+
+spring:
+  application:
+    name: file-service

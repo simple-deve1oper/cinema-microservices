@@ -1,0 +1,46 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  booking:
+    id:
+      not-found: Бронирование с идентификатором %d не найдено
+    user-id:
+      bad-request: Идентификатор пользователя не может быть пустым
+    id-user-id:
+      not-found: Бронирование с идентификатором %d для пользователя %s не найдено
+    id-status:
+      already-exists: Статус бронирования %s у брони с идентификатором %d уже существует
+      bad-request: Невозможно обновить отмененную бронь
+    status:
+      bad-request: Невозможно создать отмененную бронь
+    places:
+      already-exists: Место с идентификатором %d занято
+      bad-request: Место с идентификатором %d не относится к сеансу с идентификатором %d
+    session:
+      time-end:
+        bad-request: Бронирование мест невозможно, т.к. сеанс %s в зале %d закончен
+      available:
+        bad-request: Сеанс с идентификатором %d недоступен для бронирования
+
+rabbitmq:
+  receipt:
+    queue:
+      name:
+        creation: creation_receipt_queue_booking
+        update: update_receipt_queue_booking
+        update-status: update_status_receipt_queue_booking
+        delete: delete_receipt_queue_booking
+    exchange:
+      name: exchange_receipt_booking
+    routing-key:
+      name:
+        creation: creation_receipt_routing_key
+        update: update_receipt_routing_key
+        update-status: update_status_receipt_routing_key
+        delete: delete_receipt_routing_key

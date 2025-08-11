@@ -1,0 +1,49 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+    clean-disabled: true
+  cloud:
+    config:
+      enabled: false
+    loadbalancer:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: "info"
+    dev.movie: "debug"
+
+keycloak:
+  client-id: gateway-client
+  client-secret: lax66b9pOJMmfBEG4e9A8AyKrzRISOSY
+
+eureka:
+  client:
+    enabled: false
+
+url:
+  country: http://localhost:8131/api/v1/dictionary/countries
+  participant: http://localhost:8132/api/v1/dictionary/participants
+
+errors:
+  country:
+    codes:
+      not-found: "Переданы несуществующие коды стран: %s"
+  movie:
+    id:
+      not-found: "Фильм с идентификатором %d не найден"
+  participant:
+    ids:
+      not-found: "Переданы несуществующие идентификаторы участников: %s"
+  genre:
+    ids:
+      not-found: "Переданы несуществующие идентификаторы жанров: %s"

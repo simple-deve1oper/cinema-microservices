@@ -1,0 +1,15 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+errors:
+  country:
+    code:
+      not-found: Страна с кодом %s не найдена
+  participant:
+    id:
+      not-found: Участник с идентификатором %d не найден
