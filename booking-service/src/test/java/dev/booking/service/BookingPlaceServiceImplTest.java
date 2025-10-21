@@ -272,4 +272,39 @@ public class BookingPlaceServiceImplTest {
         Assertions.assertEquals(1, ids.size());
         Assertions.assertEquals(4L, ids.iterator().next());
     }
+
+    @Test
+    void findByBooking_SessionIdAndBooking_BookingStatus_ok() {
+        Mockito
+                .when(repository.findByBooking_SessionIdAndBooking_BookingStatus(Mockito.anyLong(),
+                                Mockito.any(BookingStatus.class)))
+                .thenReturn(List.of(entityBookingPlaceOne, entityBookingPlaceTwo));
+
+        List<BookingPlace> bookingPlaces = service.findByBooking_SessionIdAndBooking_BookingStatus(1L, BookingStatus.PAID);
+        Assertions.assertNotNull(bookingPlaces);
+        Assertions.assertFalse(bookingPlaces.isEmpty());
+        Assertions.assertEquals(2, bookingPlaces.size());
+
+        Mockito
+                .verify(repository, Mockito.times(1))
+                .findByBooking_SessionIdAndBooking_BookingStatus(Mockito.anyLong(),
+                        Mockito.any(BookingStatus.class));
+    }
+
+    @Test
+    void findByBooking_SessionIdAndBooking_BookingStatus_empty() {
+        Mockito
+                .when(repository.findByBooking_SessionIdAndBooking_BookingStatus(Mockito.anyLong(),
+                        Mockito.any(BookingStatus.class)))
+                .thenReturn(Collections.emptyList());
+
+        List<BookingPlace> bookingPlaces = service.findByBooking_SessionIdAndBooking_BookingStatus(1L, BookingStatus.PAID);
+        Assertions.assertNotNull(bookingPlaces);
+        Assertions.assertTrue(bookingPlaces.isEmpty());
+
+        Mockito
+                .verify(repository, Mockito.times(1))
+                .findByBooking_SessionIdAndBooking_BookingStatus(Mockito.anyLong(),
+                        Mockito.any(BookingStatus.class));
+    }
 }

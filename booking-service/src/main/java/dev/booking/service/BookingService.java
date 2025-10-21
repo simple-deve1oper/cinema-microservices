@@ -5,9 +5,11 @@ import dev.library.domain.booking.dto.BookingRequest;
 import dev.library.domain.booking.dto.BookingResponse;
 import dev.library.domain.booking.dto.BookingSearchRequest;
 import dev.library.domain.booking.dto.BookingStatusRequest;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.booking.dto.constant.BookingStatus;
+import dev.library.domain.rabbitmq.constant.ActionType;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Интерфейс для описания абстрактных методов сервиса сущности {@link Booking}
@@ -60,6 +62,13 @@ public interface BookingService {
     BookingResponse updateStatus(Long id, BookingStatusRequest request);
 
     /**
+     * Обновление статуса бронирований по списку идентификаторов бронирований
+     * @param ids - список идентификаторов бронирований
+     * @param bookingStatus - статус бронирования
+     */
+    void updateStatus(Set<Long> ids, BookingStatus bookingStatus);
+
+    /**
      * Удаление записи о бронировании
      * @param id - идентификатор
      */
@@ -84,4 +93,10 @@ public interface BookingService {
      * @param booking - объект типа {@link Booking}
      */
     BookingResponse buildResponse(Booking booking);
+
+    /**
+     * Проверка на существование бронирований по идентификатору сеанса
+     * @param sessionId - идентификатор сеанса
+     */
+    boolean existsBySessionId(Long sessionId);
 }

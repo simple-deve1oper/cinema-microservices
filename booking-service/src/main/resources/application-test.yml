@@ -25,19 +25,30 @@ logging:
 rabbitmq:
   receipt:
     queue:
-      name:
-        creation: creation_receipt_queue_booking
-        update: update_receipt_queue_booking
-        update-status: update_status_receipt_queue_booking
-        delete: delete_receipt_queue_booking
-    exchange:
-      name: exchange_receipt_booking
+      creation: creation_receipt_queue
+      update: update_receipt_queue
+      update-status: update_status_receipt_queue
+      delete: delete_receipt_queue
+    exchange: exchange_receipt
     routing-key:
-      name:
-        creation: creation_receipt_routing_key
-        update: update_receipt_routing_key
-        update-status: update_status_receipt_routing_key
-        delete: delete_receipt_routing_key
+      creation: creation_receipt_routing_key
+      update: update_receipt_routing_key
+      update-status: update_status_receipt_routing_key
+      delete: delete_receipt_routing_key
+  booking:
+    queue:
+      check-by-session: check_by_session_booking_queue
+    exchange: exchange_booking
+    routing-key:
+      check-by-session: check_by_session_booking_routing_key
+  session:
+    queue:
+      place:
+        update-available: update_available_session_place_queue
+    exchange: exchange_session
+    routing-key:
+      place:
+        update-available: update_available_session_place_routing_key
 
 keycloak:
   client-id: gateway-client

@@ -78,7 +78,7 @@ public interface PlaceClient {
         throw new HttpClientErrorException(HttpStatusCode.valueOf(500), "Сервис сеансов временно недоступен, повторите попытку позже!");
     }
 
-    default Long fallbackMethodGetPlaceBySessionIdAndIdsAndAvailable(Long sessionId, Set<Long> ids, Throwable throwable) {
+    default Long fallbackMethodGetPlaceNotEqualsSessionBySessionIdAndIds(Long sessionId, Set<Long> ids, Throwable throwable) {
         throw new HttpClientErrorException(HttpStatusCode.valueOf(500), "Сервис сеансов временно недоступен, повторите попытку позже!");
     }
 

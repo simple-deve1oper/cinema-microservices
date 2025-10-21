@@ -5,6 +5,7 @@ import dev.booking.entity.BookingPlace;
 import dev.booking.mapper.BookingPlaceMapper;
 import dev.booking.repository.BookingPlaceRepository;
 import dev.booking.service.BookingPlaceService;
+import dev.library.domain.booking.dto.constant.BookingStatus;
 import dev.library.domain.session.client.PlaceClient;
 import dev.library.domain.session.dto.PlaceResponse;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +85,10 @@ public class BookingPlaceServiceImpl implements BookingPlaceService {
         return placeIds.stream()
                 .filter(placeId -> !currentPlaceIds.contains(placeId))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<BookingPlace> findByBooking_SessionIdAndBooking_BookingStatus(Long sessionId, BookingStatus bookingStatus) {
+        return repository.findByBooking_SessionIdAndBooking_BookingStatus(sessionId, bookingStatus);
     }
 }

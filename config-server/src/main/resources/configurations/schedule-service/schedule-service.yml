@@ -1,0 +1,51 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+rabbitmq:
+  user:
+    queue:
+      email-verified: user_email_verified_queue
+      delete-inactive: user_delete_inactive_queue
+    exchange: exchange_user
+    routing-key:
+      email-verified: user_email_verified_routing_key
+      delete-inactive: user_delete_inactive_routing_key
+  task:
+    queue:
+      user:
+        email-verified: task_user_email_verified_queue
+        delete-inactive: task_user_delete_inactive_queue
+      session:
+        before-start: task_session_before_start_queue
+        delete: task_session_delete_queue
+        disable-by-finished: task_session_disable_by_finished_queue
+    exchange: exchange_task
+    routing-key:
+      user:
+        email-verified: task_user_email_verified_routing_key
+        delete-inactive: task_user_delete_inactive_routing_key
+      session:
+        before-start: task_session_before_start_routing_key
+        delete: task_session_start_routing_key
+        disable-by-finished: task_session_disable_by_finished_routing_key
+  booking:
+    queue:
+      check-by-session: check_by_session_booking_queue
+    exchange: exchange_booking
+    routing-key:
+      check-by-session: check_by_session_booking_routing_key
+  session:
+    queue:
+      disable-by-finished: disable_by_finished_session_queue
+      place:
+        update-available: update_available_session_place_queue
+    exchange: exchange_session
+    routing-key:
+      disable-by-finished: disable_by_finished_session_routing_key
+      place:
+        update-available: update_available_session_place_routing_key

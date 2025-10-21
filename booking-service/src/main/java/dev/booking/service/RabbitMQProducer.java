@@ -1,6 +1,6 @@
 package dev.booking.service;
 
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 
 /**
  * Интерфейс для описания абстрактных методов по отправке данных в шину данных
@@ -13,4 +13,11 @@ public interface RabbitMQProducer {
      * @param <T> - тип данных
      */
     <T> void sendMessage(T message, ActionType type);
+
+    /**
+     * Отправка сообщения
+     * @param message - объект
+     * @param <T> - тип данных
+     */
+    <T> void sendMessage(T message);
 }

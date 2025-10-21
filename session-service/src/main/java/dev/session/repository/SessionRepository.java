@@ -3,6 +3,8 @@ package dev.session.repository;
 import dev.session.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.OffsetDateTime;
 
@@ -16,4 +18,13 @@ public interface SessionRepository extends JpaRepository<Session, Long>, JpaSpec
      * @param dateTime - дата и время
      */
     boolean existsByHallAndDateTime(Integer hall, OffsetDateTime dateTime);
+
+    /**
+     * Обновление доступности сеанса
+     * @param id - идентификатор
+     * @param available - доступность
+     */
+    @Modifying
+    @Query("UPDATE Session s SET s.available = :available WHERE s.id = :id")
+    void updateAvailable(Long id, Boolean available);
 }

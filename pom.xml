@@ -30,6 +30,7 @@
         <module>config-server</module>
         <module>admin-server</module>
         <module>library-test</module>
+        <module>schedule-service</module>
     </modules>
 
     <properties>

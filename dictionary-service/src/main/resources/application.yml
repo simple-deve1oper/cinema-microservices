@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: dictionary-service
+
+logging:
+  level:
+    dev.dictionary: DEBUG
+    root: INFO

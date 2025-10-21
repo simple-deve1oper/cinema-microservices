@@ -16,7 +16,7 @@ import dev.library.domain.booking.dto.BookingSearchRequest;
 import dev.library.domain.booking.dto.BookingStatusRequest;
 import dev.library.domain.booking.dto.constant.BookingStatus;
 import dev.library.domain.movie.client.MovieClient;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 import dev.library.domain.receipt.dto.ReceiptRequest;
 import dev.library.domain.session.client.SessionClient;
 import dev.library.domain.session.dto.PlaceResponse;
@@ -1204,6 +1204,20 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void updateStatus() {
+        Mockito
+                .doNothing()
+                .when(repository)
+                .updateStatus(Mockito.anySet(), Mockito.any(BookingStatus.class));
+
+        service.updateStatus(Set.of(1L, 2L, 3L), BookingStatus.PAID);
+
+        Mockito
+                .verify(repository, Mockito.times(1))
+                .updateStatus(Mockito.anySet(), Mockito.any(BookingStatus.class));
+    }
+
+    @Test
     void deleteById() {
         Mockito
                 .when(repository.findById(Mockito.anyLong()))
@@ -1376,5 +1390,33 @@ public class BookingServiceImplTest {
         Mockito
                 .verify(sessionClient, Mockito.times(1))
                 .getById(Mockito.anyLong());
+    }
+
+    @Test
+    void existsBySessionId_true() {
+        Mockito
+                .when(repository.existsBySessionId(Mockito.anyLong()))
+                .thenReturn(true);
+
+        boolean result = service.existsBySessionId(1L);
+        Assertions.assertTrue(result);
+
+        Mockito
+                .verify(repository, Mockito.times(1))
+                .existsBySessionId(Mockito.anyLong());
+    }
+
+    @Test
+    void existsBySessionId_false() {
+        Mockito
+                .when(repository.existsBySessionId(Mockito.anyLong()))
+                .thenReturn(false);
+
+        boolean result = service.existsBySessionId(9991L);
+        Assertions.assertFalse(result);
+
+        Mockito
+                .verify(repository, Mockito.times(1))
+                .existsBySessionId(Mockito.anyLong());
     }
 }

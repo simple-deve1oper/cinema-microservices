@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: file-service
+
+logging:
+  level:
+    dev.file: DEBUG
+    root: INFO

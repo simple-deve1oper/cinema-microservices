@@ -1,11 +1,16 @@
 rabbitmq:
   notification:
     queue:
-      name:
-        creation: creation_notification_queue_booking
-        update: update_notification_queue_booking
-        update-status: update_status_notification_queue_booking
-        delete: delete_notification_queue_booking
+      creation: creation_notification_queue
+      update: update_notification_queue
+      update-status: update_status_notification_queue
+      delete: delete_notification_queue
+    exchange: exchange_notification
+    routing-key:
+      creation: creation_notification_routing_key
+      update: update_notification_routing_key
+      update-status: update_status_notification_routing_key
+      delete: delete_notification_routing_key
 
 template:
   subject: Бронь № %d

@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: receipt-service
+
+logging:
+  level:
+    dev.receipt: DEBUG
+    root: INFO
