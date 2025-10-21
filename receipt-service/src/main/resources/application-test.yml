@@ -39,32 +39,34 @@ errors:
       not-found: Запись о квитанции с идентификатором бронирования %d не найдена
       already-exists: Запись о квитанции с идентификатором %d уже существует
 
-currency:
-  sign: ₽
-
 rabbitmq:
   receipt:
     queue:
-      name:
-        creation: creation_receipt_queue_booking
-        update: update_receipt_queue_booking
-        update-status: update_status_receipt_queue_booking
-        delete: delete_receipt_queue_booking
+      creation: creation_receipt_queue
+      update: update_receipt_queue
+      update-status: update_status_receipt_queue
+      delete: delete_receipt_queue
+    exchange: exchange_receipt
+    routing-key:
+      creation: creation_receipt_routing_key
+      update: update_receipt_routing_key
+      update-status: update_status_receipt_routing_key
+      delete: delete_receipt_routing_key
   notification:
     queue:
-      name:
-        creation: creation_notification_queue_booking
-        update: update_notification_queue_booking
-        update-status: update_status_notification_queue_booking
-        delete: delete_notification_queue_booking
-    exchange:
-      name: exchange_notification_booking
+      creation: creation_notification_queue
+      update: update_notification_queue
+      update-status: update_status_notification_queue
+      delete: delete_notification_queue
+    exchange: exchange_notification
     routing-key:
-      name:
-        creation: creation_notification_routing_key
-        update: update_notification_routing_key
-        update-status: update_status_notification_routing_key
-        delete: delete_notification_routing_key
+      creation: creation_notification_routing_key
+      update: update_notification_routing_key
+      update-status: update_status_notification_routing_key
+      delete: delete_notification_routing_key
+
+currency:
+  sign: ₽
 
 url:
   booking: http://localhost:8151/api/v1/bookings

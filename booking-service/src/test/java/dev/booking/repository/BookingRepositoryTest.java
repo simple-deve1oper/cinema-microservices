@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.Set;
 
 @ActiveProfiles("test")
 public class BookingRepositoryTest extends AbstractRepositoryTest {
@@ -25,8 +26,6 @@ public class BookingRepositoryTest extends AbstractRepositoryTest {
         Assertions.assertEquals("14b8135e-4a62-4104-ac6a-26eefaeeef17", booking.getUserId());
         Assertions.assertEquals(4L, booking.getSessionId());
         Assertions.assertEquals(BookingStatus.PAID, booking.getBookingStatus());
-
-
     }
 
     @Test
@@ -41,6 +40,27 @@ public class BookingRepositoryTest extends AbstractRepositoryTest {
         Assertions.assertTrue(result);
 
         result = bookingRepository.existsByIdAndBookingStatus(3L, BookingStatus.CANCELED);
+        Assertions.assertFalse(result);
+    }
+
+    @Test
+    void updateStatus() {
+        bookingRepository.updateStatus(Set.of(5L, 6L), BookingStatus.CREATED);
+        Booking bookingFive = bookingRepository.findById(5L).orElseThrow();
+        Booking bookingSix = bookingRepository.findById(6L).orElseThrow();
+        Assertions.assertEquals(BookingStatus.CREATED, bookingFive.getBookingStatus());
+        Assertions.assertEquals(BookingStatus.CREATED, bookingSix.getBookingStatus());
+    }
+
+    @Test
+    void existsBySessionId_true() {
+        boolean result = bookingRepository.existsBySessionId(4L);
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void existsBySessionId_false() {
+        boolean result = bookingRepository.existsBySessionId(999L);
         Assertions.assertFalse(result);
     }
 }

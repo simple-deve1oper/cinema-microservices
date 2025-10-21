@@ -43,3 +43,27 @@ errors:
       already-exists: Пользователь с электронной почтой %s уже существует
     email-verified:
       already-exists: У пользователя с идентификатором %s электронная почта уже подтверждена
+
+rabbitmq:
+  user:
+    queue:
+      email-verified: user_email_verified_queue
+      delete-inactive: user_delete_inactive_queue
+    exchange: exchange_user
+    routing-key:
+      email-verified: user_email_verified_routing_key
+      delete-inactive: user_delete_inactive_routing_key
+  task:
+    queue:
+      user:
+        email-verified: task_user_email_verified_queue
+        delete-inactive: task_user_delete_inactive_queue
+    exchange: exchange_task
+    routing-key:
+      user:
+        email-verified: task_user_email_verified_routing_key
+        delete-inactive: task_user_delete_inactive_routing_key
+
+time:
+  email-verified: 1
+  delete-inactive: 0 0/2 * * * ?

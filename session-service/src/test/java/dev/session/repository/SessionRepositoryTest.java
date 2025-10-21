@@ -24,4 +24,11 @@ public class SessionRepositoryTest extends AbstractRepositoryTest {
         exists = repository.existsByHallAndDateTime(396, OffsetDateTime.now().minusDays(12));
         Assertions.assertFalse(exists);
     }
+
+    @Test
+    void updateAvailable() {
+        repository.updateAvailable(1L, true);
+        Session session = repository.findById(1L).orElseThrow();
+        Assertions.assertTrue(session.getAvailable());
+    }
 }

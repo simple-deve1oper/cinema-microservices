@@ -1,6 +1,6 @@
 package dev.receipt.service;
 
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 
 /**
  * Интерфейс для описания абстрактных методов по отправке данных в шину данных

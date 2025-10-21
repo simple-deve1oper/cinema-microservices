@@ -5,6 +5,7 @@ import dev.library.domain.movie.dto.MovieResponse;
 import dev.library.domain.session.dto.PlaceResponse;
 import dev.library.domain.user.dto.UserResponse;
 import dev.receipt.service.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -19,12 +20,15 @@ import java.math.BigDecimal;
  * Сервис, реализующий интерфейс {@link TemplateService}
  */
 @Service
+@Slf4j
 public class TemplateServiceImpl implements TemplateService {
     @Value("${currency.sign}")
     private String currencySign;
 
     @Override
     public String createContent(BookingResponse bookingResponse, MovieResponse movieResponse, UserResponse userResponse) {
+        log.debug("Started createContent(BookingResponse bookingResponse, MovieResponse movieResponse, UserResponse userResponse) with bookingResponse = {}, movieResponse = {}, userResponse = {}",
+                bookingResponse, movieResponse, userResponse);
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);

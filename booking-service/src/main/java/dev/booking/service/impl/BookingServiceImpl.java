@@ -21,7 +21,7 @@ import dev.library.domain.booking.dto.BookingStatusRequest;
 import dev.library.domain.booking.dto.constant.BookingStatus;
 import dev.library.domain.movie.client.MovieClient;
 import dev.library.domain.notification.dto.NotificationDeleteRequest;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 import dev.library.domain.receipt.dto.ReceiptRequest;
 import dev.library.domain.session.client.SessionClient;
 import dev.library.domain.session.dto.PlaceResponse;
@@ -174,6 +174,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
+    public void updateStatus(Set<Long> ids, BookingStatus bookingStatus) {
+        repository.updateStatus(ids, bookingStatus);
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Long id) {
         Booking booking = getById(id);
         repository.delete(booking);
@@ -228,6 +234,11 @@ public class BookingServiceImpl implements BookingService {
         SessionResponse sessionResponse = sessionClient.getById(booking.getSessionId());
 
         return mapper.toResponse(booking, sessionResponse, placeResponses);
+    }
+
+    @Override
+    public boolean existsBySessionId(Long sessionId) {
+        return repository.existsBySessionId(sessionId);
     }
 
     /**

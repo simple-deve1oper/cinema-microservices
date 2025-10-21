@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: booking-service
+
+logging:
+  level:
+    dev.booking: DEBUG
+    root: INFO

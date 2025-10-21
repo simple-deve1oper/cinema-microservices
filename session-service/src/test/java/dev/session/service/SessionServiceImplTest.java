@@ -5,6 +5,8 @@ import dev.library.core.exception.EntityNotFoundException;
 import dev.library.core.specification.SpecificationBuilder;
 import dev.library.core.util.DateUtil;
 import dev.library.domain.movie.client.MovieClient;
+import dev.library.domain.rabbitmq.constant.ActionType;
+import dev.library.domain.rabbitmq.constant.ScheduleType;
 import dev.library.domain.session.dto.SessionRequest;
 import dev.library.domain.session.dto.SessionResponse;
 import dev.library.domain.session.dto.SessionSearchRequest;
@@ -35,7 +37,8 @@ public class SessionServiceImplTest {
     final SessionMapper mapper = new SessionMapper();
     final SpecificationBuilder<Session> specificationBuilder = new SpecificationBuilder<>();
     final MovieClient movieClient = Mockito.mock(MovieClient.class);
-    final SessionService service = new SessionServiceImpl(repository, mapper, specificationBuilder, movieClient);
+    final RabbitMQProducer rabbitMQProducer = Mockito.mock(RabbitMQProducer.class);
+    final SessionService service = new SessionServiceImpl(repository, mapper, specificationBuilder, movieClient, rabbitMQProducer);
 
     Session entitySessionOne;
     Session entitySessionTwo;
@@ -208,6 +211,10 @@ public class SessionServiceImplTest {
         Mockito
                 .verify(repository, Mockito.times(1))
                 .save(Mockito.any(Session.class));
+        Mockito
+                .verify(rabbitMQProducer, Mockito.times(0))
+                .sendMessage(Mockito.anyString(), Mockito.any(OffsetDateTime.class), Mockito.any(ActionType.class),
+                        Mockito.any(ScheduleType.class));
     }
 
     @Test
@@ -293,6 +300,14 @@ public class SessionServiceImplTest {
         Mockito
                 .when(repository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(entitySessionOne));
+        Mockito
+                .when(movieClient.getDurationById(Mockito.anyLong()))
+                .thenReturn(1);
+        Mockito
+                .doNothing()
+                .when(rabbitMQProducer)
+                .sendMessage(Mockito.anyString(), Mockito.any(OffsetDateTime.class), Mockito.any(ActionType.class),
+                        Mockito.any(ScheduleType.class));
 
         SessionResponse response = service.update(1L, request);
         Assertions.assertNotNull(response);
@@ -308,6 +323,13 @@ public class SessionServiceImplTest {
         Mockito
                 .verify(repository, Mockito.times(1))
                 .save(Mockito.any(Session.class));
+        Mockito
+                .verify(movieClient, Mockito.times(1))
+                        .getDurationById(Mockito.anyLong());
+        Mockito
+                .verify(rabbitMQProducer, Mockito.times(2))
+                .sendMessage(Mockito.anyString(), Mockito.any(OffsetDateTime.class), Mockito.any(ActionType.class),
+                        Mockito.any(ScheduleType.class));
     }
 
     @Test
@@ -419,6 +441,10 @@ public class SessionServiceImplTest {
                 .doNothing()
                 .when(repository)
                 .deleteById(Mockito.anyLong());
+        Mockito
+                .doNothing()
+                .when(rabbitMQProducer)
+                .sendMessage(Mockito.anyString());
 
         service.deleteById(1L);
 
@@ -428,6 +454,9 @@ public class SessionServiceImplTest {
         Mockito
                 .verify(repository, Mockito.times(1))
                 .deleteById(Mockito.anyLong());
+        Mockito
+                .verify(rabbitMQProducer, Mockito.times(1))
+                .sendMessage(Mockito.anyString());
     }
 
     @Test

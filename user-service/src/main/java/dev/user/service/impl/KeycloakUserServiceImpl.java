@@ -11,6 +11,8 @@ import dev.library.domain.user.dto.constant.Authority;
 import dev.user.mapper.UserMapper;
 import dev.user.service.KeycloakRoleService;
 import dev.user.service.KeycloakUserService;
+import dev.user.service.RabbitMQProducer;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -34,6 +36,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     private final RealmResource resource;
     private final UserMapper mapper;
     private final KeycloakRoleService roleService;
+    private final RabbitMQProducer rabbitMQProducer;
 
     @Value("${errors.user.id.not-found}")
     private String errorUserIdNotFound;
@@ -45,6 +48,11 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     private String errorUserEmailAlreadyExists;
     @Value("${errors.user.email-verified.already-exists}")
     private String errorUserEmailVerifiedAlreadyExists;
+
+    @PostConstruct
+    public void init() {
+        rabbitMQProducer.sendMessageDeleteInactive();
+    }
 
     @Override
     public List<UserResponse> getAll() {
@@ -92,6 +100,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
             statusCode = response.getStatus();
         }
         sendVerificationEmail(representation.getId());
+        rabbitMQProducer.sendMessageEmailVerified(representation.getId());
 
         return statusCode;
     }

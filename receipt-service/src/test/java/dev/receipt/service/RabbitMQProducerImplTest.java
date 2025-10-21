@@ -7,7 +7,7 @@ import dev.library.domain.movie.dto.GenreResponse;
 import dev.library.domain.movie.dto.MovieResponse;
 import dev.library.domain.notification.dto.NotificationDeleteRequest;
 import dev.library.domain.notification.dto.NotificationRequest;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 import dev.library.domain.session.dto.PlaceResponse;
 import dev.library.domain.session.dto.SessionResponse;
 import dev.library.domain.user.dto.RoleResponse;
@@ -42,7 +42,7 @@ public class RabbitMQProducerImplTest {
 
     @BeforeEach
     void init() {
-        ReflectionTestUtils.setField(service, "notificationExchange", "exchange_notification_booking");
+        ReflectionTestUtils.setField(service, "notificationExchange", "exchange_notification");
         ReflectionTestUtils.setField(service, "creationNotificationRoutingKey", "creation_notification_routing_key");
         ReflectionTestUtils.setField(service, "updateNotificationRoutingKey", "update_notification_routing_key");
         ReflectionTestUtils.setField(service, "deleteNotificationRoutingKey", "delete_notification_routing_key");

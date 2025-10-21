@@ -31,7 +31,8 @@ public class KeycloakUserServiceImplTest {
     final RealmResource resource = Mockito.mock(RealmResource.class);
     final UserMapper mapper = new UserMapper();
     final KeycloakRoleService roleService = Mockito.mock(KeycloakRoleService.class);
-    final KeycloakUserService service = new KeycloakUserServiceImpl(resource, mapper, roleService);
+    final RabbitMQProducer rabbitMQProducer = Mockito.mock(RabbitMQProducer.class);
+    final KeycloakUserService service = new KeycloakUserServiceImpl(resource, mapper, roleService, rabbitMQProducer);
     final UsersResource usersResource = Mockito.mock(UsersResource.class);
     final UserResource userResource = Mockito.mock(UserResource.class);
 
@@ -186,6 +187,10 @@ public class KeycloakUserServiceImplTest {
                 .doNothing()
                 .when(roleService)
                 .addRoleToUser(Mockito.anyString(), Mockito.anyString());
+        Mockito
+                .doNothing()
+                .when(rabbitMQProducer)
+                .sendMessageEmailVerified(Mockito.anyString());
 
 
         UserRegistrationRequest request = new UserRegistrationRequest(
@@ -218,6 +223,9 @@ public class KeycloakUserServiceImplTest {
         Mockito
                 .verify(resource.users().get(Mockito.anyString()), Mockito.times(1))
                 .sendVerifyEmail();
+        Mockito
+                .verify(rabbitMQProducer, Mockito.times(1))
+                .sendMessageEmailVerified(Mockito.anyString());
     }
 
     @Test

@@ -5,6 +5,7 @@ import dev.notification.service.MailSendingService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,11 +18,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MailSendingServiceImpl implements MailSendingService {
     private final JavaMailSender mailSender;
 
     @Override
     public void sendMessage(String to, String subject, String body) {
+        log.debug("Started sendMessage(String to, String subject, String body) with to = {}, subject = {}, body = {}",
+                to, subject, body);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
@@ -33,6 +37,8 @@ public class MailSendingServiceImpl implements MailSendingService {
 
     @Override
     public void sendMessage(String to, String subject, String body, String attachmentFilename, InputStreamSource inputStreamSource) {
+        log.debug("Started sendMessage(String to, String subject, String body, String attachmentFilename, InputStreamSource inputStreamSource) with to = {}, subject = {}, body = {}, attachmentFilename = {}, inputStreamSource = {}",
+                to, subject, body, attachmentFilename, inputStreamSource);
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);

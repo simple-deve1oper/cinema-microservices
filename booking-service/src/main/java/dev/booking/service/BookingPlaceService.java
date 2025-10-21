@@ -2,6 +2,7 @@ package dev.booking.service;
 
 import dev.booking.entity.Booking;
 import dev.booking.entity.BookingPlace;
+import dev.library.domain.booking.dto.constant.BookingStatus;
 import dev.library.domain.session.dto.PlaceResponse;
 
 import java.util.List;
@@ -70,4 +71,11 @@ public interface BookingPlaceService {
      * @param placeIds - новый список идентификаторов мест
      */
     Set<Long> getIdsForCreate(Set<Long> currentPlaceIds, Set<Long> placeIds);
+
+    /**
+     * Получение записей о местах для бронирования по идентификатору сеанса и статусу бронирования
+     * @param sessionId - идентификатор сеанса
+     * @param bookingStatus - статус бронирования
+     */
+    List<BookingPlace> findByBooking_SessionIdAndBooking_BookingStatus(Long sessionId, BookingStatus bookingStatus);
 }

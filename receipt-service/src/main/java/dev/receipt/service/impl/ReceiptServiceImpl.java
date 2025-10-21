@@ -9,7 +9,7 @@ import dev.library.domain.movie.client.MovieClient;
 import dev.library.domain.movie.dto.MovieResponse;
 import dev.library.domain.notification.dto.NotificationDeleteRequest;
 import dev.library.domain.notification.dto.NotificationRequest;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 import dev.library.domain.receipt.dto.ReceiptRequest;
 import dev.library.domain.session.dto.PlaceResponse;
 import dev.library.domain.session.dto.SessionResponse;
@@ -70,7 +70,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = {"${rabbitmq.receipt.queue.name.creation}"})
+    @RabbitListener(queues = {"${rabbitmq.receipt.queue.creation}"})
     public void create(ReceiptRequest request) {
         BookingResponse bookingResponse = request.bookingResponse();
         UserResponse userResponse = request.userResponse();
@@ -92,7 +92,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = {"${rabbitmq.receipt.queue.name.update}"})
+    @RabbitListener(queues = {"${rabbitmq.receipt.queue.update}"})
     public void update(ReceiptRequest request) {
         NotificationRequest notificationRequest = updateReceipt(request);
         rabbitMQProducer.sendMessage(notificationRequest, ActionType.UPDATE);
@@ -100,7 +100,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = {"${rabbitmq.receipt.queue.name.update-status}"})
+    @RabbitListener(queues = {"${rabbitmq.receipt.queue.update-status}"})
     public void updateStatus(ReceiptRequest request) {
         NotificationRequest notificationRequest = updateReceipt(request);
         rabbitMQProducer.sendMessage(notificationRequest, ActionType.UPDATE_STATUS);
@@ -108,7 +108,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = {"${rabbitmq.receipt.queue.name.delete}"})
+    @RabbitListener(queues = {"${rabbitmq.receipt.queue.delete}"})
     public void deleteByBookingId(NotificationDeleteRequest request) {
         Long bookingId = request.bookingId();
         checkExistsByBookingId(bookingId);

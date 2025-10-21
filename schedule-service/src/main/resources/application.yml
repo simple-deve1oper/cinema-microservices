@@ -1,0 +1,11 @@
+server:
+  port: 8040
+
+spring:
+  application:
+    name: schedule-service
+
+logging:
+  level:
+    dev.schedule: DEBUG
+    root: INFO

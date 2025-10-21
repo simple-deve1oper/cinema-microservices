@@ -1,5 +1,5 @@
 services:
-  psql_country:
+  psql_dictionary:
     container_name: psql_dictionary
     image: postgres:16
     environment:
@@ -86,6 +86,21 @@ services:
       - ./data/psql_receipt:/data/postgres
     ports:
       - "5440:5432"
+    networks:
+      - microservices-net
+
+  psql_quartz:
+    container_name: psql_quartz
+    image: postgres:16
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: quartz_db
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/psql_quartz:/data/postgres
+    ports:
+      - "5441:5432"
     networks:
       - microservices-net
 

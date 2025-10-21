@@ -47,4 +47,11 @@ public interface SessionService {
      * @param id - идентификатор
      */
     Session findById(Long id);
+
+    /**
+     * Обновление доступности сеанса
+     * @param id - идентификатор с
+     * @param available - доступность
+     */
+    void updateAvailable(Long id, Boolean available);
 }

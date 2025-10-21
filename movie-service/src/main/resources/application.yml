@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: movie-service
+
+logging:
+  level:
+    dev.movie: DEBUG
+    root: INFO

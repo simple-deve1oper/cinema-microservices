@@ -9,8 +9,15 @@ import dev.session.repository.PlaceRepository;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,8 +26,29 @@ import java.util.Set;
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PlaceControllerTest extends AbstractControllerTest {
+    private static final Logger log = LoggerFactory.getLogger(PlaceControllerTest.class);
+
     @Autowired
     private PlaceRepository placeRepository;
+
+    @Container
+    static RabbitMQContainer RABBIT_MQ_CONTAINER = new RabbitMQContainer(DockerImageName.parse("rabbitmq:4.0.6-management"))
+            .withAdminUser("admin")
+            .withAdminPassword("admin");
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.rabbitmq.host", RABBIT_MQ_CONTAINER::getHost);
+        registry.add("spring.rabbitmq.port", RABBIT_MQ_CONTAINER::getAmqpPort);
+        registry.add("spring.rabbitmq.username", () -> "admin");
+        registry.add("spring.rabbitmq.password", () -> "admin");
+    }
+
+    @BeforeAll
+    static void setUpAll() {
+        int rabbitManagement = RABBIT_MQ_CONTAINER.getMappedPort(15672);
+        log.info("rabbitManagement port: {}", rabbitManagement);
+    }
 
     @Test
     @Order(1)

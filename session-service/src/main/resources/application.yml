@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: session-service
+
+logging:
+  level:
+    dev.session: DEBUG
+    root: INFO

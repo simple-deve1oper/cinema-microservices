@@ -12,7 +12,7 @@ import dev.library.domain.movie.dto.GenreResponse;
 import dev.library.domain.movie.dto.MovieResponse;
 import dev.library.domain.notification.dto.NotificationDeleteRequest;
 import dev.library.domain.notification.dto.NotificationRequest;
-import dev.library.domain.rabbitmq.ActionType;
+import dev.library.domain.rabbitmq.constant.ActionType;
 import dev.library.domain.receipt.dto.ReceiptRequest;
 import dev.library.domain.session.dto.PlaceResponse;
 import dev.library.domain.session.dto.SessionResponse;
