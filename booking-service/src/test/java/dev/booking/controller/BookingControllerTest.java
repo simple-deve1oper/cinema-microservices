@@ -968,6 +968,32 @@ public class BookingControllerTest extends AbstractControllerTest {
 
     @Test
     @Order(12)
+    void create_accessForbiddenException_checkEmail() {
+        String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "alex3865", "1234");
+
+        BookingRequest request = new BookingRequest(
+                "45de29ed-2c87-4c3e-9188-23d0611910ee",
+                null,
+                null,
+                null
+        );
+        RestAssured
+                .given()
+                .body(request)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .post("/api/v1/bookings")
+                .then()
+                .log().all()
+                .statusCode(403)
+                .body("code", Matchers.equalTo(403))
+                .body("message", Matchers.equalTo("Пользователю 45de29ed-2c87-4c3e-9188-23d0611910ee необходимо подтвердить электронную почту для продолжения работы"))
+                .body("dateTime", Matchers.notNullValue());
+    }
+
+    @Test
+    @Order(13)
     void create_badRequestException_checkValidation() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -1017,7 +1043,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(13)
+    @Order(14)
     void create_badRequestException_statusCancelled() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "ivan5436", "1234");
 
@@ -1042,7 +1068,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(14)
+    @Order(15)
     void create_badRequestException_sessionIsNotAvailable() throws JsonProcessingException {
         String sessionResponseOneJson = mapper.writeValueAsString(sessionResponseOne);
         mockSessionService
@@ -1076,7 +1102,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(15)
+    @Order(16)
     void create_badRequestException_sessionHasPassed() throws JsonProcessingException {
         OffsetDateTime dateTime = OffsetDateTime.now(ZoneOffset.UTC).minusDays(1);
 
@@ -1128,7 +1154,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(16)
+    @Order(17)
     void create_entityAlreadyExistsException_placeNotEqualsSessionBySessionIdAndIds() throws JsonProcessingException {
         String sessionResponseFiveJson = mapper.writeValueAsString(sessionResponseFive);
         mockSessionService
@@ -1178,7 +1204,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(17)
+    @Order(18)
     void create_entityAlreadyExistsException_placeBySessionIdAndIdsAndAvailableFalse() throws JsonProcessingException {
         String sessionResponseFourJson = mapper.writeValueAsString(sessionResponseFour);
         mockSessionService
@@ -1237,7 +1263,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(18)
+    @Order(19)
     void create_sessionService_unavailable() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "ivan5436", "1234");
 
@@ -1262,7 +1288,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(19)
+    @Order(20)
     void create_movieService_unavailable() throws JsonProcessingException {
         String sessionResponseFiveJson = mapper.writeValueAsString(sessionResponseFive);
         mockSessionService
@@ -1296,7 +1322,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(20)
+    @Order(21)
     void create_userService_unavailable() throws JsonProcessingException {
         String sessionResponseFiveJson = mapper.writeValueAsString(sessionResponseFive);
         mockSessionService
@@ -1376,7 +1402,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(21)
+    @Order(22)
     void create_userService_unauthorized() {
         BookingRequest request = new BookingRequest(
                 5L,
@@ -1395,7 +1421,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(22)
+    @Order(23)
     void update_ok_replacePlaces() throws JsonProcessingException {
         String sessionResponseFiveJson = mapper.writeValueAsString(sessionResponseFive);
         mockSessionService
@@ -1499,7 +1525,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(23)
+    @Order(24)
     void update_ok_statusCanceled() throws JsonProcessingException {
         String sessionResponseThreeJson = mapper.writeValueAsString(sessionResponseThree);
         mockSessionService
@@ -1593,7 +1619,34 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(24)
+    @Order(25)
+    void update_accessForbiddenException_checkEmail() {
+        String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "alex3865", "1234");
+
+        BookingRequest request = new BookingRequest(
+                "45de29ed-2c87-4c3e-9188-23d0611910ee",
+                null,
+                null,
+                null
+        );
+        RestAssured
+                .given()
+                .pathParam("id", 4)
+                .body(request)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .put("/api/v1/bookings/{id}")
+                .then()
+                .log().all()
+                .statusCode(403)
+                .body("code", Matchers.equalTo(403))
+                .body("message", Matchers.equalTo("Пользователю 45de29ed-2c87-4c3e-9188-23d0611910ee необходимо подтвердить электронную почту для продолжения работы"))
+                .body("dateTime", Matchers.notNullValue());
+    }
+
+    @Test
+    @Order(26)
     void update_badRequestException_checkValidation() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -1647,7 +1700,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(25)
+    @Order(27)
     void update_badRequestException_userIdIsEmpty() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -1673,7 +1726,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(26)
+    @Order(28)
     void update_badRequestException_bookingAndStatusCanceledForUpdate() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -1701,7 +1754,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(27)
+    @Order(29)
     void update_entityNotFoundException() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -1729,7 +1782,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(28)
+    @Order(30)
     void update_badRequestException_sessionIsNotAvailable() throws JsonProcessingException {
         String sessionResponseOneJson = mapper.writeValueAsString(sessionResponseOne);
         mockSessionService
@@ -1765,7 +1818,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(29)
+    @Order(31)
     void update_badRequestException_sessionHasPassed() throws JsonProcessingException {
         OffsetDateTime dateTime = OffsetDateTime.now(ZoneOffset.UTC).minusDays(1);
 
@@ -1819,7 +1872,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(30)
+    @Order(32)
     void update_entityAlreadyExistsException_placeNotEqualsSessionBySessionIdAndIds() throws JsonProcessingException {
         String sessionResponseFiveJson = mapper.writeValueAsString(sessionResponseFive);
         mockSessionService
@@ -1870,7 +1923,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(31)
+    @Order(33)
     void update_entityAlreadyExistsException_placeBySessionIdAndIdsAndAvailableFalse() throws JsonProcessingException {
         String sessionResponseFourJson = mapper.writeValueAsString(sessionResponseFour);
         mockSessionService
@@ -1931,7 +1984,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(32)
+    @Order(34)
     void update_sessionService_unavailable() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "ivan5436", "1234");
 
@@ -1958,7 +2011,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(33)
+    @Order(35)
     void update_movieService_unavailable() throws JsonProcessingException {
         String sessionResponseFourJson = mapper.writeValueAsString(sessionResponseFour);
         mockSessionService
@@ -1994,7 +2047,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(34)
+    @Order(36)
     void update_userService_unavailable() throws JsonProcessingException {
         String sessionResponseFourJson = mapper.writeValueAsString(sessionResponseFour);
         mockSessionService
@@ -2083,7 +2136,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(35)
+    @Order(37)
     void update_forbidden() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "dima1111", "1234");
 
@@ -2107,7 +2160,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(36)
+    @Order(38)
     void update_unauthorized() {
         BookingRequest request = new BookingRequest(
                 "3ca5d554-4102-4fa5-bc54-c355502b1fe5",
@@ -2128,7 +2181,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(37)
+    @Order(39)
     void updateStatus_ok() throws JsonProcessingException {
         placeResponseThirtySixForSessionFour = new PlaceResponse(
                 36L,
@@ -2245,7 +2298,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(38)
+    @Order(40)
     void updateStatus_clientRole_ok() throws JsonProcessingException {
         mockPlaceService
                 .stubFor(
@@ -2350,7 +2403,32 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(39)
+    @Order(41)
+    void updateStatus_accessForbiddenException_checkEmail() {
+        String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "alex3865", "1234");
+
+        BookingStatusRequest request = new BookingStatusRequest(
+                "cecdbfd0-60cd-41af-b3f7-32b0d3beff907777",
+                null
+        );
+        RestAssured
+                .given()
+                .pathParam("id", 7)
+                .body(request)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .patch("/api/v1/bookings/{id}/status")
+                .then()
+                .log().all()
+                .statusCode(403)
+                .body("code", Matchers.equalTo(403))
+                .body("message", Matchers.equalTo("Пользователю 45de29ed-2c87-4c3e-9188-23d0611910ee необходимо подтвердить электронную почту для продолжения работы"))
+                .body("dateTime", Matchers.notNullValue());
+    }
+
+    @Test
+    @Order(42)
     void updateStatus_badRequestException_checkValidation() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "dima1111", "1234");
 
@@ -2377,7 +2455,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(40)
+    @Order(43)
     void updateStatus_entityNotFoundException_notExistsById() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2402,7 +2480,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(41)
+    @Order(44)
     void updateStatus_entityNotFoundException_notExistsByIdAndUserId() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2428,7 +2506,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(42)
+    @Order(45)
     void updateStatus_badRequestException_idAndBookingStatusCanceled() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2454,7 +2532,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(43)
+    @Order(46)
     void updateStatus_entityAlreadyExistsException_existsByIdAndBookingStatus() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2480,7 +2558,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(44)
+    @Order(47)
     void updateStatus_sessionService_unavailable() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "ivan5436", "1234");
 
@@ -2505,7 +2583,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(45)
+    @Order(48)
     void updateStatus_userService_unavailable() throws JsonProcessingException {
         List<PlaceResponse> placeResponsesForSessionSeven = List.of(
                 placeResponseOneHundredTwelveForSessionSeven,
@@ -2552,7 +2630,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(46)
+    @Order(49)
     void updateStatus_unauthorized() {
         BookingStatusRequest request = new BookingStatusRequest(
                 "14b8135e-4a62-4104-ac6a-26eefaeeef17",
@@ -2571,7 +2649,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(47)
+    @Order(50)
     void deleteById_ok() {
         mockPlaceService
                 .stubFor(
@@ -2598,7 +2676,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(48)
+    @Order(51)
     void deleteById_statusCanceled_ok() throws JsonProcessingException {
         mockPlaceService
                 .stubFor(
@@ -2633,7 +2711,26 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(49)
+    @Order(52)
+    void deleteById_accessForbiddenException_checkEmail() {
+        String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "alex3865", "1234");
+
+        RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", 11999)
+                .when()
+                .delete("/api/v1/bookings/{id}")
+                .then()
+                .log().all()
+                .statusCode(403)
+                .body("code", Matchers.equalTo(403))
+                .body("message", Matchers.equalTo("Пользователю 45de29ed-2c87-4c3e-9188-23d0611910ee необходимо подтвердить электронную почту для продолжения работы"))
+                .body("dateTime", Matchers.notNullValue());
+    }
+
+    @Test
+    @Order(53)
     void deleteById_entityNotFoundException() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2652,7 +2749,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(50)
+    @Order(54)
     void deleteById_sessionService_unavailable() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "admin5876", "1234");
 
@@ -2671,7 +2768,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(51)
+    @Order(55)
     void deleteById_userService_unavailable() {
         mockPlaceService
                 .stubFor(
@@ -2701,7 +2798,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(52)
+    @Order(56)
     void deleteById_forbidden() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.PASSWORD, clientId, clientSecret, "ivan5436", "1234");
 
@@ -2717,7 +2814,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(53)
+    @Order(57)
     void deleteById_unauthorized() {
         RestAssured
                 .given()
@@ -2730,7 +2827,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(54)
+    @Order(58)
     void existsByIdAndUserId_true() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.CLIENT_CREDENTIALS, clientId, clientSecret);
 
@@ -2748,7 +2845,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(55)
+    @Order(59)
     void existsByIdAndUserId_false() {
         String token = AuthorizationUtils.getToken(restClient, GrantType.CLIENT_CREDENTIALS, clientId, clientSecret);
 
@@ -2766,7 +2863,7 @@ public class BookingControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(56)
+    @Order(60)
     void existsByIdAndUserId_unauthorized() {
         RestAssured
                 .given()
