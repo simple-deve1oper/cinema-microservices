@@ -20,6 +20,11 @@ spring:
         jwt:
           issuer-uri: http://0.0.0.1:9180/realms/cinema
           jwk-set-uri: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/certs
+  rabbitmq:
+    host: 0.0.0.1
+    port: 5672
+    username: admin
+    password: ENC(ORcESJhoOIBIMxZKrknWqIUo0y4KajrY9n48MDeiT7fwL+sNnYh8gPvVYaLhUFeH)
 
 eureka:
   client:

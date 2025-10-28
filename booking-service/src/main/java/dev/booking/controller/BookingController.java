@@ -178,7 +178,6 @@ public class BookingController {
     @PreAuthorize("hasAnyRole('admin', 'manager', 'client')")
     public ResponseEntity<BookingResponse> getById(@PathVariable Long id) {
         Authentication authentication = UserDataUtils.getAuthentication();
-
         Booking booking;
         if (RoleUtils.checkRole(authentication, "client")) {
             booking = service.getById(id, authentication.getName());
@@ -255,6 +254,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> create(@RequestBody @Valid BookingRequest request,
                                                   @Parameter(hidden = true) BindingResult bindingResult) {
         Authentication authentication = UserDataUtils.getAuthentication();
+        UserDataUtils.checkEmailVerification(authentication);
         if (request.getUserId() == null || RoleUtils.checkRole(authentication, "client")) {
             request.setUserId(authentication.getName());
         }
@@ -349,6 +349,8 @@ public class BookingController {
     @PreAuthorize("hasAnyRole('admin', 'manager')")
     public ResponseEntity<BookingResponse> update(@PathVariable Long id, @RequestBody @Valid BookingRequest request,
                                                   @Parameter(hidden = true) BindingResult bindingResult) {
+        Authentication authentication = UserDataUtils.getAuthentication();
+        UserDataUtils.checkEmailVerification(authentication);
         if (request.getUserId() == null) {
             throw new BadRequestException(errorBookingUserIdBadRequest);
         }
@@ -518,6 +520,8 @@ public class BookingController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('admin')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        Authentication authentication = UserDataUtils.getAuthentication();
+        UserDataUtils.checkEmailVerification(authentication);
         service.deleteById(id);
 
         return ResponseEntity.noContent().build();

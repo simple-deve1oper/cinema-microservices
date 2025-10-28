@@ -167,3 +167,17 @@ scrape_configs:
         - metrics
       endpoint_params:
         grant_type: client_credentials
+  - job_name: schedule_service
+    static_configs:
+      - targets: [ "0.0.0.1:8040" ]
+        labels:
+          application: schedule-service
+    metrics_path: "/actuator/prometheus"
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: xmCIGnkAWkHBAnmiF0AYlwdrSCL77rCe
+      token_url: http://0.0.0.1:9180/realms/cinema/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials

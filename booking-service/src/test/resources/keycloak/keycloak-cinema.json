@@ -484,7 +484,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "client", "default-roles-cinema" ],
+    "realmRoles" : [ "admin", "default-roles-cinema" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {

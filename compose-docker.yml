@@ -330,6 +330,28 @@ services:
     networks:
       - microservices-net
 
+  schedule_service:
+    container_name: schedule-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: schedule-service/target/schedule-service-1.0.0-SNAPSHOT-exec.jar
+      tags:
+        - cinema/schedule-service:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: config
+      LOKI: http://0.0.0.1:3100
+      JAVA_TOOL_OPTIONS: "-DCONFIG_TOKEN=${TOKEN}"
+    ports:
+      - "8040:8040"
+    depends_on:
+      config_server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - microservices-net
+
 networks:
   microservices-net:
     external: true
